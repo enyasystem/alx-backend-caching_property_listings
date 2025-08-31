@@ -31,5 +31,6 @@ def get_redis_cache_metrics():
         logger.info('Redis cache metrics: %s', metrics)
         return metrics
     except Exception as e:
+        logger.error('Failed to get redis metrics: %s', e)
         logger.exception('Failed to get redis metrics: %s', e)
         return {'hits': 0, 'misses': 0, 'hit_ratio': 0}
