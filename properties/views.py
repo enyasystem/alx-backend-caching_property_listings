@@ -18,4 +18,5 @@ def property_list(request):
         }
         for p in qs
     ]
-    return JsonResponse(data, safe=False)
+    # return an object so clients can expect a JSON mapping
+    return JsonResponse({'properties': data})
