@@ -22,14 +22,14 @@ def get_redis_cache_metrics():
     try:
         conn = get_redis_connection('default')
         info = conn.info()
+
         hits = int(info.get('keyspace_hits', 0))
         misses = int(info.get('keyspace_misses', 0))
-        ratio = None
-        if hits + misses > 0:
-            ratio = hits / (hits + misses)
-        metrics = {'hits': hits, 'misses': misses, 'hit_ratio': ratio}
+        total_requests = hits + misses
+        hit_ratio = hits / total_requests if total_requests > 0 else 0
+        metrics = {'hits': hits, 'misses': misses, 'hit_ratio': hit_ratio}
         logger.info('Redis cache metrics: %s', metrics)
         return metrics
     except Exception as e:
         logger.exception('Failed to get redis metrics: %s', e)
-        return {'hits': 0, 'misses': 0, 'hit_ratio': None}
+        return {'hits': 0, 'misses': 0, 'hit_ratio': 0}
